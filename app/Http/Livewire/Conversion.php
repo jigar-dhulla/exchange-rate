@@ -2,11 +2,17 @@
 
 namespace App\Http\Livewire;
 
+use App\Exceptions\ExchangeRateException;
 use App\Services\Contract\ExchangeRate as ExchangeRateContract;
 use Livewire\Component;
 
 class Conversion extends Component
 {
+    /**
+     * Assignment Restriction
+     */
+    private const ALLOWED_SYMBOLS = ['INR', 'EUR'];
+
     /**
      * @var string $from
      */
@@ -38,7 +44,12 @@ class Conversion extends Component
 
     public function mount(ExchangeRateContract $service)
     {
-        $this->currencies = $service->getAllowedCurrencies();
+        try {
+            $symbols = $service->getAllowedCurrencies();
+            $this->currencies = array_filter($symbols, fn ($symbol) => in_array($symbol, self::ALLOWED_SYMBOLS));
+        } catch (ExchangeRateException $e) {
+            session()->flash('api_error', $e->getMessage());
+        }
     }
 
     /**
@@ -57,6 +68,10 @@ class Conversion extends Component
     public function convert(ExchangeRateContract $service)
     {
         $this->validate();
-        $this->result = $service->convert($this->from, $this->to);
+        try {
+            $this->result = $service->convert($this->from, $this->to);
+        } catch (ExchangeRateException $e) {
+            session()->flash('api_error', $e->getMessage());
+        }
     }
 }

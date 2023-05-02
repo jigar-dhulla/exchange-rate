@@ -23,4 +23,10 @@
         <button type="submit">Convert</button>
     </form>
     <div>{{ $result }}</div>
+    
+    @if (session()->has('api_error'))
+        <div>
+            {{ session('api_error') }}
+        </div>
+    @endif
 </div>

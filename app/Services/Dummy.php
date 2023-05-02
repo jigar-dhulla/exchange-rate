@@ -13,7 +13,7 @@ class Dummy implements ExchangeRateContract
 
     public function convert(string $from, string $to): float
     {
-        return 90.00;  
+        return 90.00;
     }
 
     public function getAllowedCurrencies(): array
