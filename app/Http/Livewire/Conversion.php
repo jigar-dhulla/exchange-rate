@@ -3,7 +3,9 @@
 namespace App\Http\Livewire;
 
 use App\Exceptions\ExchangeRateException;
+use App\Models\Conversion as ConversionModel;
 use App\Services\Contract\ExchangeRate as ExchangeRateContract;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
 class Conversion extends Component
@@ -42,11 +44,17 @@ class Conversion extends Component
         'result' => 'nullable|numeric',
     ];
 
+    /**
+     * @var Collection $conversions
+     */
+    public Collection $conversions;
+
     public function mount(ExchangeRateContract $service)
     {
         try {
             $symbols = $service->getAllowedCurrencies();
             $this->currencies = array_filter($symbols, fn ($symbol) => in_array($symbol, self::ALLOWED_SYMBOLS));
+            $this->conversions = $this->getConversions();
         } catch (ExchangeRateException $e) {
             session()->flash('api_error', $e->getMessage());
         }
@@ -73,5 +81,19 @@ class Conversion extends Component
         } catch (ExchangeRateException $e) {
             session()->flash('api_error', $e->getMessage());
         }
+
+        ConversionModel::updateOrCreate([
+            'from' => $this->from,
+            'to' => $this->to,
+            'conversion_date' => now()->format('Y-m-d'),
+        ], [
+            'result' => $this->result,
+        ]);
+    }
+
+    private function getConversions($limit = null)
+    {
+        $limit ??= (int) config('app.pagination_limit', 10);
+        return ConversionModel::take($limit)->get();
     }
 }

@@ -24,6 +24,19 @@
     </form>
     <div>{{ $result }}</div>
     
+    <div>
+        <hr/>
+        @foreach($conversions as $conversion)
+            <div>
+                <div>{{ $conversion->from }}</div>
+                <div>{{ $conversion->to }}</div>
+                <div>{{ $conversion->result }}</div>
+                <div>{{ $conversion->conversion_date->format('Y-m-d') }}</div>
+            </div>
+            <hr/>
+        @endforeach
+    </div>
+    
     @if (session()->has('api_error'))
         <div>
             {{ session('api_error') }}
