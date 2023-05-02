@@ -2,12 +2,22 @@
     <form wire:submit.prevent="convert">
         <div>
             <label>From</label>
-            <input wire:model="from" type="text" name="from" value="" />
+            <select wire:model="from" type="text" name="from">
+                <option>(Select)</option>
+                @foreach($currencies as $currency)
+                    <option value="{{$currency}}">{{$currency}}</option>
+                @endforeach
+            </select>
             @error('from') <span class="error">{{ $message }}</span> @enderror
         </div>
         <div>
             <label>To</label>
-            <input wire:model="to" type="text" name="to" value=""/>
+            <select wire:model="to" type="text" name="to" value="">
+                <option>(Select)</option>
+                @foreach($currencies as $currency)
+                    <option value="{{$currency}}">{{$currency}}</option>
+                @endforeach
+            </select>
             @error('to') <span class="error">{{ $message }}</span> @enderror
         </div>
         <button type="submit">Convert</button>
