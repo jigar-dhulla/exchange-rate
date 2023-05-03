@@ -61,6 +61,7 @@ Caching
 * Fallback Service if exchangerate.host is impacted
 * Figure out ideal ttl for cache
 * Refresh History table on form submit
+* Tests
 
 ## Suggestions?
 
