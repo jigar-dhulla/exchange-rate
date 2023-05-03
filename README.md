@@ -10,25 +10,36 @@
 * Livewire v2
 * Bootstrap 5
 
-## Setup
+## Local Setup
 
 ### Clone this project.
 > git clone git@github.com:jigarakatidus/exchange-rate.git
 
+> cd exchange-rate
+
 ### Copy Environment
 > cp .env.example .env
+
+### In `.env` file
+* Change `DB_HOST` to `mysql`
+* Change `CACHE_DRIVER` to `redis` to use redis service, default is `file` driver
+
 
 ### Install Dependency
 > docker run --rm -u "$(id -u):$(id -g)" -v $(pwd):/var/www/html -w /var/www/html laravelsail/php82-composer:latest composer install --ignore-platform-reqs
 
 ### Start Services
-> ./vendor/bin/sail up
+> ./vendor/bin/sail up -d
 
 ### Generate Key
 > ./vendor/bin/sail artisan key:generate
 
 ### Run Migrations
 > ./vendor/bin/sail artisan migrate
+
+### To access
+
+Visit: http://localhost
 
 ## Services
 
@@ -49,6 +60,7 @@ Caching
 
 * Fallback Service if exchangerate.host is impacted
 * Figure out ideal ttl for cache
+* Refresh History table on form submit
 
 ## Suggestions?
 
