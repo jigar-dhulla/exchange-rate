@@ -39,8 +39,8 @@ class Conversion extends Component
      * @var array $to
      */
     protected array $rules = [
-        'from' => 'required',
-        'to' => 'required',
+        'from' => 'required|string|size:3',
+        'to' => 'required|string|size:3',
         'result' => 'nullable|numeric',
     ];
 
@@ -75,6 +75,7 @@ class Conversion extends Component
      */
     public function convert(ExchangeRateContract $service)
     {
+        $this->result = null;
         $this->validate();
         try {
             $this->result = $service->convert($this->from, $this->to);
@@ -82,18 +83,20 @@ class Conversion extends Component
             session()->flash('api_error', $e->getMessage());
         }
 
-        ConversionModel::updateOrCreate([
-            'from' => $this->from,
-            'to' => $this->to,
-            'conversion_date' => now()->format('Y-m-d'),
-        ], [
-            'result' => $this->result,
-        ]);
+        if($this->result){
+            ConversionModel::updateOrCreate([
+                'from' => $this->from,
+                'to' => $this->to,
+                'conversion_date' => now()->format('Y-m-d'),
+            ], [
+                'result' => $this->result,
+            ]);
+        }
     }
 
     private function getConversions($limit = null)
     {
         $limit ??= (int) config('app.pagination_limit', 10);
-        return ConversionModel::take($limit)->get();
+        return ConversionModel::take($limit)->orderBy('conversion_date', 'desc')->get();
     }
 }
