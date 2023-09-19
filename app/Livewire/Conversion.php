@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use App\Exceptions\ExchangeRateException;
 use App\Models\Conversion as ConversionModel;

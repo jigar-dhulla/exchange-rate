@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Livewire\Conversion;
+use App\Livewire\Conversion;
 use Illuminate\Support\Facades\Route;
 
 /*

@@ -1,5 +1,5 @@
 <div>
-    <form class="form pb-3" wire:submit.prevent="convert">
+    <form class="form pb-3" wire:submit="convert">
         <div class="mb-3">
             <label class="form-label">From</label>
             <select class="form-control" wire:model="from" type="text" name="from">
