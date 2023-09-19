@@ -7,7 +7,7 @@
 ## Tech Stack
 
 * Laravel 10
-* Livewire v2
+* Livewire v3
 * Bootstrap 5
 
 ## Local Setup
@@ -55,13 +55,6 @@ Database
 
 ### Redis
 Caching
-
-## Roadmap and tech-debt
-
-* Fallback Service if exchangerate.host is impacted #1
-* Figure out ideal ttl for cache #2
-* Refresh History table on form submit #3
-* Tests #4
 
 ## Suggestions?
 
