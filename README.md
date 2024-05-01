@@ -4,6 +4,11 @@
 * Using exchangerate.host service to fetch the rates
 * Stores and Displays the history of conversions
 
+# Explanation of this repo
+This repo was featured in [Laravel Daily](https://www.youtube.com/@LaravelDaily) youtube channel
+* Video 1: https://www.youtube.com/watch?v=YSZqSUe4m7I
+* Video 2: https://www.youtube.com/watch?v=5cSTC3AG3tQ
+
 ## Tech Stack
 
 * Laravel 10
