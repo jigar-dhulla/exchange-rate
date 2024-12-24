@@ -21,7 +21,14 @@ class ExchangeRateHost implements ExchangeRateContract
         $cacheKey = sprintf('%s-%s-%s', __CLASS__, $from, $to);
         $ttl = (int) config('services.conversion.ttl', 3600);
         return Cache::remember($cacheKey, $ttl, function () use ($from, $to) {
-            $uri = sprintf('/convert?from=%s&to=%s', $from, $to);
+            $accessKey = config('services.exchange_rate_host.access_key');
+            if (!$accessKey) {
+                Log::error("Access Key not found for Exchange Rate Host", [
+                    'class' => __CLASS__,
+                ]);
+                throw new ExchangeRateException("Access Key not found for Exchange Rate Host");
+            }
+            $uri = sprintf('/convert?from=%s&to=%s&amount=1&access_key=%s', $from, $to, $accessKey);
             $response = Http::get(self::API_URL . $uri);
             $array = $response->json();
             if(!$array['success'] ?? false){
@@ -36,30 +43,6 @@ class ExchangeRateHost implements ExchangeRateContract
             }
 
             return (float) $array['result'];
-        });
-    }
-
-    /**
-     * @inheritdoc
-     * @throws ExchangeRateException
-     */
-    public function getAllowedCurrencies(): array
-    {
-        $cacheKey = sprintf('%s-%s', __CLASS__, 'symbols');
-        $ttl = (int) config('services.symbols.ttl', 3600);
-        return Cache::remember($cacheKey, $ttl, function (){
-            $response = Http::get(self::API_URL . '/symbols');
-            $array = $response->json();
-            if(!$array['success'] ?? false){
-                Log::error("Error in API Response of fetching symbols", [
-                    'class' => __CLASS__,
-                    'response' => $response->body(),
-                    'status' => $response->status(),
-                ]);
-                throw new ExchangeRateException("Could not fetch symbols");
-            }
-
-            return array_keys($array['symbols']);
         });
     }
 }

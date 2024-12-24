@@ -28,7 +28,8 @@ This repo was featured in [Laravel Daily](https://www.youtube.com/@LaravelDaily)
 ### In `.env` file
 * Change `DB_HOST` to `mysql`
 * Change `CACHE_DRIVER` to `redis` to use redis service, default is `file` driver
-
+* Change `REDIS_HOST` to `redis`
+* Create Exchange Rate Host API Key and add the same to `EXCHANGE_RATE_HOST_ACCESS_KEY`
 
 ### Install Dependency
 > docker run --rm -u "$(id -u):$(id -g)" -v $(pwd):/var/www/html -w /var/www/html laravelsail/php82-composer:latest composer install --ignore-platform-reqs

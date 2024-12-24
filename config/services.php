@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'exchange_rate_host' => [
+        'access_key' => env('EXCHANGE_RATE_HOST_ACCESS_KEY'),
+    ],
+
 ];

@@ -49,11 +49,10 @@ class Conversion extends Component
      */
     public Collection $conversions;
 
-    public function mount(ExchangeRateContract $service)
+    public function mount()
     {
         try {
-            $symbols = $service->getAllowedCurrencies();
-            $this->currencies = array_filter($symbols, fn ($symbol) => in_array($symbol, self::ALLOWED_SYMBOLS));
+            $this->currencies = self::ALLOWED_SYMBOLS;
             $this->conversions = $this->getConversions();
         } catch (ExchangeRateException $e) {
             session()->flash('api_error', $e->getMessage());
