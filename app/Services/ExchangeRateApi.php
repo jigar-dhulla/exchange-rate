@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class ExchangeRateHost implements ExchangeRateContract
+class ExchangeRateApi implements ExchangeRateContract
 {
-    private const API_URL = 'https://api.exchangerate.host';
+    private const API_URL = 'https://v6.exchangerate-api.com/v6';
 
     /**
      * @inheritdoc
@@ -19,21 +19,22 @@ class ExchangeRateHost implements ExchangeRateContract
     public function convert(string $from, string $to): float
     {
         $cacheKey = sprintf('%s-%s-%s', __CLASS__, $from, $to);
-        $ttl = (int) config('services.exchange_rate_host.ttl', 3600);
+        $ttl = (int) config('services.exchange_rate_api.ttl', 86400);
         return Cache::remember($cacheKey, $ttl, function () use ($from, $to) {
-            $accessKey = config('services.exchange_rate_host.access_key');
+            $accessKey = config('services.exchange_rate_api.access_key');
             if (!$accessKey) {
-                Log::error("Access Key not found for Exchange Rate Host", [
+                Log::error("Access Key not found for Exchange Rate API", [
                     'class' => __CLASS__,
                 ]);
-                throw new ExchangeRateException("Access Key not found for Exchange Rate Host");
+                throw new ExchangeRateException("Access Key not found for Exchange Rate API");
             }
-            $uri = sprintf('/convert?from=%s&to=%s&amount=1&access_key=%s', $from, $to, $accessKey);
+            $uri = sprintf('/%s/latest/%s', $accessKey, $from);
             $response = Http::get(self::API_URL . $uri);
             $array = $response->json();
-            if(!$array['success'] ?? false){
+            if(!is_array($array) || $array['result'] !== "success"){
                 Log::error("Error in API Response of Exchange Rate Conversion", [
                     'class' => __CLASS__,
+                    'uri' => $uri,
                     'from' => $from,
                     'to' => $to,
                     'response' => $response->body(),
@@ -42,7 +43,7 @@ class ExchangeRateHost implements ExchangeRateContract
                 throw new ExchangeRateException("Could not convert from $from to $to");
             }
 
-            return (float) $array['result'];
+            return (float) $array['conversion_rates'][$to];
         });
     }
 }

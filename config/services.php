@@ -31,8 +31,18 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'exchange_rate' => [
+        'driver' => env('EXCHANGE_RATE_DRIVER', 'exchange_rate_host'),
+    ],
+
     'exchange_rate_host' => [
         'access_key' => env('EXCHANGE_RATE_HOST_ACCESS_KEY'),
+        'ttl' => 3600,
+    ],
+
+    'exchange_rate_api' => [
+        'access_key' => env('EXCHANGE_RATE_API_ACCESS_KEY'),
+        'ttl' => env('EXCHANGE_RATE_API_TTL', 86400),
     ],
 
 ];
